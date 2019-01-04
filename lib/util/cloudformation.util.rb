@@ -343,6 +343,34 @@ module Cfhighlander
         end
       end
 
+      ##
+      ## Replace every matched leaf in given tree with replacement
+      ## Leafs can be matched equality, or by regex.
+      ##
+      def self.leaf_replace(tree, search, replacement)
+        def match(search, value)
+          if search.class == Regexp
+            return value.scan(search)
+          else
+            return value == search
+          end
+        end
+
+        if tree.is_a? Hash
+          tree.each do |key, value|
+            result =  match(search, value)
+            if result
+              if search.class == Regexp
+
+              end
+            end
+          end
+        elsif tree.is_a? Array
+          tree.each do |element|
+
+          end
+        end
+      end
       # rename cloudformation resource in model
       def self.rename_resource(tree, search, replacement)
         tree.keys.each do |k|
