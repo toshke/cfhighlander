@@ -193,6 +193,29 @@ module Cfhighlander
 
       def LambdaFunctions(config_key)
         @lambda_functions_keys << config_key
+        add_vpc_params = false
+        if (@config[config_key].key? 'vpc') and (@config[config_key]['vpc'] == 'auto')
+          add_vpc_params = true
+        end
+
+        @config[config_key]['functions'].each do |name, lambda_config|
+          if lambda_config.key? 'vpc'
+            if lambda_config['vpc'] == 'auto'
+              add_vpc_params = true
+            end
+          end
+        end
+
+        if add_vpc_params
+          max_az = if (@config.key? 'maximum_availability_zones') then @config['maximum_availability_zones'] else 5 end
+          Parameters do
+            max_az.times do |az|
+              ComponentParam "SubnetCompute#{az}"
+            end
+            ComponentParam 'VPCId', type: 'AWS::EC2::VPC::Id'
+          end
+        end
+
       end
 
       # Internal and interface functions

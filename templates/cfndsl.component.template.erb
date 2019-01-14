@@ -27,7 +27,8 @@ CloudFormation do
         render_lambda_functions(self,
         <%= @key %>,
         lambda_metadata,
-        {'bucket'=>'<%= dsl.distribution_bucket %>','prefix' => '<%= dsl.distribution_prefix %>', 'version'=>'<%= dsl.version %>'})
+        {'bucket'=>'<%= dsl.distribution_bucket %>','prefix' => '<%= dsl.distribution_prefix %>', 'version'=>'<%= dsl.version %>'},
+        if (defined? maximum_availability_zones) then maximum_availability_zones else 5 end)
     <% end %>
 <% end %>
     # cfhighlander generated parameters
